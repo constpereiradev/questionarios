@@ -34,7 +34,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::controller(ClienteController::class)->group(function () {
-    Route::get('/cliente/ver/questionario/{id}', [ClienteController::class, 'verQuestionario'])->name('cliente.questionario.ver');
+    Route::get('/questionario/{token}', [ClienteController::class, 'verQuestionario'])->name('cliente.questionario.ver');
 });
 
 

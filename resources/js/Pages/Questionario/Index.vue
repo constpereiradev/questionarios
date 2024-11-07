@@ -10,30 +10,54 @@
             </div>
         </div>
 
-        <div v-for="questionario in questionarios" class="row p-3 m-3 border rounded bg-white">
-            <div class="col-sm-12">
-                <div class="row">
-                    <div class="col-sm-6 fw-medium fs-3"> {{ questionario.nome }}</div>
-                    <div class="col-sm-6 justify-content-end d-flex">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <button @click="verQuestionario(questionario.id)" class="btn btn-secondary fs-6">
-                                    <i class="bi bi-eye"></i>
-                                </button>
-                            </div>
+        <di class="row p-3">
+            <div class="col-sm-11">
+                <input type="text" class="form-control" placeholder="Pesquisar" </div>
+                <div class="col-sm-1 justify-content-end d-flex">
+                    <button class=" fs-4"><i class="bi bi-search"></i></button>
+                </div>
+        </di>
+
+        <div class="row p-3">
+            <div v-for="questionario in questionarios" style="height: 500px; width: 450px;"
+                
+                class="col-sm-4 border rounded bg-white p-5 m-3 d-flex flex-column justify-content-between">
+
+                <div>
+                    <div class="row mb-2">
+                        <div
+                            class="col-sm-9 justify-content-start d-flex align-items-center rounded fw-medium fs-5 text-center">
+                            <span class="p-2 rounded fw-medium text-white"
+                                :class="{ 'bg-success': questionario.status == 'Ativo', 'bg-danger-subtle': questionario.status == 'Inativo' }">
+                                {{ questionario.status }}
+                            </span>
+                        </div>
+                        <div class="col-sm-3 justify-content-end d-flex">
+                            <button class="btn fs-2">
+                                <i class="bi bi-three-dots"></i>
+                            </button>
                         </div>
                     </div>
+
+                    <div class="row">
+                        <div class="col-sm-12 fw-medium fs-3">{{ questionario.nome }}</div>
+                    </div>
                 </div>
-                <div class="row">
-                    <div class="col-sm-6 fs-6 text-secondary"> {{ questionario.perguntas.length }} Perguntas</div>
+                <div>
+                    <div class="row mb-4">
+                        <div class="col-sm-6 fs-5 text-secondary">{{ questionario.perguntas.length }} Perguntas</div>
+                    </div>
+                    <div class="row">
+                        <div @click="verQuestionario(questionario.id)" class="btn btn-outline-secondary fw-bold text-black fs-5">Enviar questionário</div>
+                    </div>
                 </div>
             </div>
-
         </div>
 
+
         <!-- Modal -->
-        <div v-if="mostrarModal" class="modal" id="novoQuestionario">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div v-if="mostrarModalNovoQuestionario" class="modal" id="novoQuestionario">
+            <div class="modal-dialog modal-dialog-centered modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5">Novo questionário</h1>
@@ -118,7 +142,7 @@ export default defineComponent({
     data() {
         return {
             questionarios: [],
-            mostrarModal: false,
+            mostrarModalNovoQuestionario: false,
             novoQuestionario: {
                 nome: '',
                 perguntas: []
@@ -138,17 +162,17 @@ export default defineComponent({
 
         },
         abrirModal() {
-            this.mostrarModal = true;
+            this.mostrarModalNovoQuestionario = true;
         },
         fecharModal() {
-            this.mostrarModal = false;
+            this.mostrarModalNovoQuestionario = false;
             this.resetarFormulario();
         },
         submitQuestionario() {
             axios.post(route('questionario.registrar'), { novoQuestionario: this.novoQuestionario })
                 .then(() => {
-                    console.log(this.novoQuestionario);
-                    window.location.reload();
+                    this.apiQuestionarios();
+                    this.mostrarModalNovoQuestionario = false;
                 })
                 .catch(err => console.error('Erro ao salvar questionário:', err));
         },
@@ -170,7 +194,7 @@ export default defineComponent({
             this.novoQuestionario = { nome: '', perguntas: [] };
             this.novaPergunta = { nome: '', tipo: 'texto' };
         },
-        verQuestionario(id){
+        verQuestionario(id) {
             this.$inertia.get(route('questionario.ver', { id }));
         }
     }

@@ -9,7 +9,8 @@ class Questionario extends Model
 {
     protected $fillable = [
         'nome',
-        'status'
+        'status',
+        'token',
     ];
 
 

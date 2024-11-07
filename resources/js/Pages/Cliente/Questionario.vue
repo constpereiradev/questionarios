@@ -2,45 +2,39 @@
 
     <Head title="Dashboard" />
 
-    <AuthenticatedLayout>
-        <div class="row p-3 m-3 border rounded bg-white">
-            <div class="col-sm-12">
-                <div class="row mb-3">
-                    <div class="col-sm-6 fw-medium fs-3"> {{ questionario.nome }}</div>
-                    <div class="col-sm-6 justify-content-end d-flex">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <button @click="verQuestionario(questionario.id)" class="btn btn-secondary fs-6">
-                                    <i class="bi bi-eye"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+    <div class="row p-3 bg-white p-3 mb-3">
+        <div class="col-sm-6 fs-1 fw-medium"> {{ questionario.nome }}
+        </div>
+    </div>
+
+    <div class="row p-3 m-3 border rounded bg-white text-black">
+    <div class="col-sm-12">
+        <div v-for="(pergunta, index) in questionario.perguntas" class="row mb-4">
+
+            <div class="col-sm-12 p-3 d-flex justify-content-center align-items-center fs-1 mb-2">
+                <div class="d-flex w-75">
+                    <div class="text-start me-2">{{ index + 1 }}.</div> 
+                    <div class="text-start">{{ pergunta.nome }}</div> 
                 </div>
-                <div v-for="pergunta in questionario.perguntas" class="row mb-2">
-                    <div class="col-sm-12">
+            </div>
 
-                        <div class="row mb-1">
-                            <div class="col-sm-12 justify-content-start d-flex fs-5 text-secondary"> {{ pergunta.nome }}
-                            </div>
-                        </div>
-
-
-                        <!-- Tipo de pergunta númerica -->
-                        <div v-if="pergunta.tipo == 'numerica'"  class="row mb-3">
-                            <div class="col-sm-12 justify-content-start d-flex fs-5 text-secondary"> 
-                                    <p class="me-3" v-for="numero in numeros">
-                                        <button @click="registrarResposta(pergunta.id, numero)">{{ numero }}</button>
-                                    </p>
-                            </div>
-                        </div>
-
+            <div v-if="pergunta.tipo == 'numerica'" class="row">
+                <div class="col-sm-12 d-flex justify-content-center">
+                    <div class="d-flex justify-content-around w-75">
+                        <button v-for="numero in numeros" 
+                                @click="registrarResposta(pergunta.id, numero)" 
+                                class="btn btn-outline-primary me-2 fs-5">
+                            {{ numero }}
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+</div>
 
-    </AuthenticatedLayout>
+
+
 </template>
 
 <script>
@@ -62,7 +56,7 @@ export default defineComponent({
         };
     },
     methods: {
-        registrarResposta(pergunta_id, resposta){
+        registrarResposta(pergunta_id, resposta) {
 
         }
     }

@@ -1,36 +1,60 @@
 <template>
 
-    <Head title="Dashboard" />
+    <Head title="Questionário" />
 
     <AuthenticatedLayout>
-        <div class="row p-3">
-            <div class="col-sm-6 fs-1 fw-medium">Questionários</div>
-            <div class="col-sm-6 fw-medium justify-content-end d-flex">
-                <button @click="abrirModal" class="btn-padrao">+ Novo questionário</button>
+        <div class="row p-3 bg-white p-3 mb-3">
+            <div class="col-sm-6 fs-1 fw-medium"> {{ questionario.nome }}
+               
+            </div>
+            <div class="col-sm-6  justify-content-end d-flex fs-1 fw-medium">
+                <span class="p-2 rounded fw-medium text-white"
+                    :class="{ 'bg-success': questionario.status == 'Ativo', 'bg-danger-subtle': questionario.status == 'Inativo' }">
+                    {{ questionario.status }}
+                </span>
             </div>
         </div>
 
-        <div class="row p-3 m-3 border rounded bg-white">
-            <div class="col-sm-12">
-                <div class="row mb-3">
-                    <div class="col-sm-6 fw-medium fs-3"> {{ questionario.nome }}</div>
-                    <div class="col-sm-6 justify-content-end d-flex">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <button @click="verQuestionario(questionario.id)" class="btn btn-secondary fs-6">
-                                    <i class="bi bi-eye"></i>
-                                </button>
+        <div class="row p-3">
+            <div class="col-sm-6 fs-1 fw-normal"> Métricas do questionário <button @click="copiarLink(questionario)"
+                    class="btn fs-1">
+                    <i v-if="!this.copiado" class="bi bi-clipboard"></i>
+                    <i v-else class="bi bi-clipboard-check"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12 p-3 m-3  fs-4">
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="row mb">
+                            <div class="col-sm-12">Total de respostas</div>
+                        </div>
+                        <div class="row mb">
+                            <div class="col-sm-12 fs-1 fw-bold">
+                                {{ qtdRespostas }}
                             </div>
                         </div>
                     </div>
-                </div>
-                <div v-for="pergunta in questionario.perguntas" class="row mb-2">
-                    <div class="col-sm-6 fs-6 text-secondary"> {{ pergunta.nome }} </div>
-                </div>
-            </div>
+                    <div class="col-sm-6">
+                        <div class="row mb">
+                            <div class="col-sm-12">Link</div>
+                        </div>
+                        <div class="row fw-bold">
+                            <div class="col-sm-12">http://127.0.0.1:8000/questionario/{{ questionario.token }}</div>
+                        </div>
+                    </div>
 
+
+                </div>
+
+            </div>
         </div>
-  
+
+        
+
     </AuthenticatedLayout>
 </template>
 
@@ -43,17 +67,28 @@ export default defineComponent({
     components: {
         AuthenticatedLayout
     },
-    props: ['questionario'],
+    props: ['questionario', 'qtdRespostas'],
     mounted() {
 
     },
     data() {
         return {
-
+            copiado: false,
         };
     },
     methods: {
-
+        copiarLink(questionario) {
+            const link = `http://127.0.0.1:8000/questionario/${questionario.token}`;
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(link)
+                    .then(() => {
+                        console.log('Link copiado!')
+                        this.copiado = true;
+                    }).catch(err => console.error('Erro ao copiar: ', err));
+            } else {
+                console.error('Clipboard API não disponível.');
+            }
+        },
     }
 });
 </script>
