@@ -8,9 +8,11 @@ use Inertia\Inertia;
 
 class ClienteController extends Controller
 {
-    public function verQuestionario($id)
+    public function verQuestionario($token)
     {
-        $questionario = Questionario::with('perguntas')->findOrFail($id);
+        $questionario = Questionario::with('perguntas', 'perguntas.opcoes')
+        ->where('token', $token)
+        ->firstOrFail();
         
         return Inertia::render('Cliente/Questionario', [
             'questionario' => $questionario,

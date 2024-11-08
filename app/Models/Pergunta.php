@@ -20,8 +20,13 @@ class Pergunta extends Model
         return $this->belongsTo(Questionario::class);
     }
 
-    public function resposta(): HasMany
+    public function respostas(): HasMany
     {
         return $this->hasMany(Resposta::class);
+    }
+
+    public function opcoes(): HasMany
+    {
+        return $this->hasMany(OpcaoResposta::class);
     }
 }
