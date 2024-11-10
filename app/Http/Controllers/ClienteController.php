@@ -10,7 +10,7 @@ class ClienteController extends Controller
 {
     public function verQuestionario($token)
     {
-        $questionario = Questionario::with('perguntas')
+        $questionario = Questionario::with('perguntas', 'perguntas.opcoes')
         ->where('token', $token)
         ->firstOrFail();
         

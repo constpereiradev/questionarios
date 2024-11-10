@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\QrCodeController;
 use App\Http\Controllers\QuestionarioController;
+use App\Http\Controllers\RespostaController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -20,6 +22,8 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -28,13 +32,19 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/questionarios', [QuestionarioController::class, 'index'])->name('questionario.index');
+    Route::get('/questionario/novo', [QuestionarioController::class, 'create'])->name('questionario.novo');
     Route::post('/questionario/registrar', [QuestionarioController::class, 'store'])->name('questionario.registrar');
     Route::post('/questionario/api', [QuestionarioController::class, 'api'])->name('questionario.api');
-    Route::get('/questionario/ver/{id}', [QuestionarioController::class, 'show'])->name('questionario.ver');
+    Route::get('/questionario/ver/{id}', [QuestionarioController::class, 'read'])->name('questionario.ver');
+    Route::get('/questionario/deletar/{id}', [QuestionarioController::class, 'delete'])->name('questionario.deletar');
 });
 
 Route::controller(ClienteController::class)->group(function () {
     Route::get('/questionario/{token}', [ClienteController::class, 'verQuestionario'])->name('cliente.questionario.ver');
+});
+
+Route::controller(RespostaController::class)->group(function () {
+    Route::post('/pergunta/registrar', [RespostaController::class, 'store'])->name('pergunta.registrar');
 });
 
 

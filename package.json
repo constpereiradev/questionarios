@@ -19,6 +19,8 @@
         "vue": "^3.4.0"
     },
     "dependencies": {
-        "vue-apexcharts": "^1.6.2"
+        "qrcode-vue3": "^1.7.1",
+        "vue-apexcharts": "^1.6.2",
+        "vue3-apexcharts": "^1.7.0"
     }
 }
